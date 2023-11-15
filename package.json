@@ -17,7 +17,7 @@
     "esbuild": "^0.19.5",
     "lucide-react": "^0.292.0",
     "mdx-bundler": "^9.2.1",
-    "next": "14.0.2",
+    "next": "^14.0.2",
     "next-i18n-router": "^5.0.1",
     "react": "^18",
     "react-dom": "^18",

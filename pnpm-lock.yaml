@@ -27,7 +27,7 @@ dependencies:
     specifier: ^9.2.1
     version: 9.2.1(esbuild@0.19.5)
   next:
-    specifier: 14.0.2
+    specifier: ^14.0.2
     version: 14.0.2(react-dom@18.2.0)(react@18.2.0)
   next-i18n-router:
     specifier: ^5.0.1
