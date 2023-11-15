@@ -7,8 +7,8 @@ import { Link } from "@/components/link";
 import { PageProps } from "../../layout";
 import { getDictionary } from "@/utils/get-dictionary";
 import { getPost } from "@/utils/get-post";
-import { translateWithDeepL } from "@/utils/translate-with-deepl";
 import "@/styles/prism-vsc-dark-plus.css";
+import { translateWithChatGPT } from "@/utils/translate-with-chatgpt";
 
 type Props = { params: { slug: string } } & PageProps;
 
@@ -19,7 +19,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props) {
   const post = await getPost(params.slug);
-  const title = await translateWithDeepL(post.frontmatter.title, params.lang);
+  const title = await translateWithChatGPT(post.frontmatter.title, params.lang);
 
   return {
     title,
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props) {
 export default async function Page({ params: { slug, lang } }: Props) {
   const { code, frontmatter } = await getPost(slug);
   const dictionary = getDictionary(lang);
-  const title = await translateWithDeepL(frontmatter.title, lang);
+  const title = await translateWithChatGPT(frontmatter.title, lang);
 
   return (
     <div className="grid gap-16">
