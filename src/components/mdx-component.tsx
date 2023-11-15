@@ -28,7 +28,13 @@ export async function MDXComponent({ code, lang }: Props) {
     Record<string, React.ComponentType<any>>
   >((acc, tag) => {
     acc[tag] = async ({ children, ...rest }) =>
-      createElement(tag, rest, await translateWithChatGPT(children, lang));
+      createElement(
+        tag,
+        rest,
+        typeof children === "string"
+          ? await translateWithChatGPT(children, lang)
+          : children
+      );
     return acc;
   }, {});
 
