@@ -6,3 +6,5 @@ export type Frontmatter = {
 };
 
 export type Locale = (typeof i18nConfig)["locales"][number];
+
+export type OpenAiResult = { result: string };
