@@ -21,7 +21,6 @@ export const translateWithChatGPT = cache(
     } text into ${
       languages[targetLang]
     }, keeping in mind that it will be used in ${CONTEXT}. Output the translation in JSON format: \`${JSON_FORMAT}\`. The text is: "${text}"`;
-    console.log(content);
 
     try {
       const chatCompletion = await openai.chat.completions.create({
