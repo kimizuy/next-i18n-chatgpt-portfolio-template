@@ -1,3 +1,4 @@
+// NOTE: After updating this file, run `gen:type-predicates`.
 import { i18nConfig } from "./i18n-config";
 
 export type Frontmatter = {
