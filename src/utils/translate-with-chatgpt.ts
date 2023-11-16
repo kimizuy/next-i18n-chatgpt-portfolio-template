@@ -5,8 +5,7 @@ import { isOpenAiResult } from "./type-predicates";
 import { getErrorMessage } from "./helpers";
 import { cache } from "react";
 
-const CONTEXT =
-  "the text of a .md or .mdx file from a web developer's portfolio site";
+const CONTEXT = "a web developer's portfolio site";
 const JSON_FORMAT = `{"result": "translated text"}`;
 
 export const openai = new OpenAI({
