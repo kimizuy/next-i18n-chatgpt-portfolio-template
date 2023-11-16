@@ -5,17 +5,21 @@ import * as Popover from "@radix-ui/react-popover";
 import { Link } from "./link";
 import { usePathname, useRouter } from "next/navigation";
 import { isLocale } from "@/utils/type-predicates";
+import { i18nConfig, languages } from "@/utils/i18n-config";
+import { Locale } from "@/utils/types";
 
-export function Navigation() {
+type Props = { lang: Locale };
+
+export function Navigation({ lang }: Props) {
   return (
     <nav>
-      <MobileMenu />
-      <DesktopMenu />
+      <MobileMenu lang={lang} />
+      <DesktopMenu lang={lang} />
     </nav>
   );
 }
 
-function MobileMenu() {
+function MobileMenu({ lang }: Props) {
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
@@ -30,14 +34,14 @@ function MobileMenu() {
           <Link href="/about">About</Link>
           <div className="my-1 w-full border-t" />
           <small className="text-muted-foreground">Languages</small>
-          <LanguageChanger />
+          <LanguageChanger lang={lang} />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
   );
 }
 
-function DesktopMenu() {
+function DesktopMenu({ lang }: Props) {
   return (
     <div className="hidden gap-4 md:flex">
       <Link href="/blog">Blog</Link>
@@ -51,7 +55,7 @@ function DesktopMenu() {
         <Popover.Anchor />
         <Popover.Portal>
           <Popover.Content className="z-20 m-2 hidden place-items-start gap-2 border bg-background p-4 md:grid">
-            <LanguageChanger />
+            <LanguageChanger lang={lang} />
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
@@ -59,7 +63,7 @@ function DesktopMenu() {
   );
 }
 
-function LanguageChanger() {
+function LanguageChanger({ lang }: Props) {
   const router = useRouter();
   const currentPathname = usePathname();
   const [first, ...rest] = currentPathname.split("/").filter(Boolean);
@@ -82,15 +86,20 @@ function LanguageChanger() {
 
   return (
     <>
-      <button type="button" onClick={() => handleClick("en")}>
-        English
-      </button>
-      <button type="button" onClick={() => handleClick("de")}>
-        Deutsch
-      </button>
-      <button type="button" onClick={() => handleClick("ja")}>
-        日本語
-      </button>
+      {i18nConfig.locales.map((locale) => (
+        <button
+          key={locale}
+          type="button"
+          onClick={() => handleClick(locale)}
+          className={`${
+            locale === lang
+              ? "font-bold text-foreground"
+              : "text-muted-foreground"
+          }`}
+        >
+          {languages[locale]}
+        </button>
+      ))}
     </>
   );
 }
