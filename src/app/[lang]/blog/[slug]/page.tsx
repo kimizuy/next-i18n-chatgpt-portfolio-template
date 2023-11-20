@@ -42,7 +42,7 @@ export default async function Page({ params: { slug, lang } }: Props) {
         </div>
       </header>
       <main>
-        <MDXComponent code={code} lang={lang} />
+        <MDXComponent code={code} lang={lang} slug={slug} />
       </main>
       <footer>
         <Link href="/blog" className="flex gap-1">
