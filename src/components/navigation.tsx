@@ -5,61 +5,63 @@ import * as Popover from "@radix-ui/react-popover";
 import { Link } from "./link";
 import { usePathname, useRouter } from "next/navigation";
 import { isLocale } from "@/utils/type-predicates";
+import { i18nConfig, languages } from "@/utils/i18n-config";
+import { Locale } from "@/utils/types";
+import { getDictionary } from "@/utils/get-dictionary";
 
-export function Navigation() {
+type Props = { lang: Locale };
+
+export function Navigation({ lang }: Props) {
+  const dictionary = getDictionary(lang);
+
   return (
     <nav>
-      <MobileMenu />
-      <DesktopMenu />
-    </nav>
-  );
-}
-
-function MobileMenu() {
-  return (
-    <Popover.Root>
-      <Popover.Trigger asChild>
-        <button className="block md:hidden" aria-label="Open navigation">
-          <MenuIcon />
-        </button>
-      </Popover.Trigger>
-      <Popover.Anchor />
-      <Popover.Portal>
-        <Popover.Content className="z-20 m-2 grid place-items-start gap-2 border bg-background p-4">
-          <Link href="/blog">Blog</Link>
-          <Link href="/about">About</Link>
-          <div className="my-1 w-full border-t" />
-          <small className="text-muted-foreground">Languages</small>
-          <LanguageChanger />
-        </Popover.Content>
-      </Popover.Portal>
-    </Popover.Root>
-  );
-}
-
-function DesktopMenu() {
-  return (
-    <div className="hidden gap-4 md:flex">
-      <Link href="/blog">Blog</Link>
-      <Link href="/about">About</Link>
+      {/* Mobile menu */}
       <Popover.Root>
         <Popover.Trigger asChild>
-          <button aria-label="Switch language">
-            <Globe />
+          <button className="block md:hidden" aria-label="Open navigation">
+            <MenuIcon />
           </button>
         </Popover.Trigger>
         <Popover.Anchor />
         <Popover.Portal>
-          <Popover.Content className="z-20 m-2 hidden place-items-start gap-2 border bg-background p-4 md:grid">
-            <LanguageChanger />
+          <Popover.Content className="z-20 m-2 grid place-items-start gap-2 border bg-background p-4">
+            <Link href="/blog">Blog</Link>
+            <Link href="/about">About</Link>
+            <div className="my-1 w-full border-t" />
+            <Globe
+              size={16}
+              className="text-muted-foreground"
+              aria-label={dictionary.language}
+            />
+            <LanguageChanger lang={lang} />
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
-    </div>
+
+      {/* Desktop menu */}
+      <div className="hidden gap-4 md:flex">
+        <Link href="/blog">Blog</Link>
+        <Link href="/about">About</Link>
+        <Popover.Root>
+          <Popover.Trigger asChild>
+            <button aria-label="Switch language">
+              <Globe />
+            </button>
+          </Popover.Trigger>
+          <Popover.Anchor />
+          <Popover.Portal>
+            <Popover.Content className="z-20 m-2 hidden place-items-start gap-2 border bg-background p-4 md:grid">
+              <LanguageChanger lang={lang} />
+            </Popover.Content>
+          </Popover.Portal>
+        </Popover.Root>
+      </div>
+    </nav>
   );
 }
 
-function LanguageChanger() {
+function LanguageChanger({ lang }: Props) {
   const router = useRouter();
   const currentPathname = usePathname();
   const [first, ...rest] = currentPathname.split("/").filter(Boolean);
@@ -82,15 +84,20 @@ function LanguageChanger() {
 
   return (
     <>
-      <button type="button" onClick={() => handleClick("en")}>
-        English
-      </button>
-      <button type="button" onClick={() => handleClick("de")}>
-        Deutsch
-      </button>
-      <button type="button" onClick={() => handleClick("ja")}>
-        日本語
-      </button>
+      {i18nConfig.locales.map((locale) => (
+        <button
+          key={locale}
+          type="button"
+          onClick={() => handleClick(locale)}
+          className={`${
+            locale === lang
+              ? "font-bold text-foreground"
+              : "text-muted-foreground"
+          }`}
+        >
+          {languages[locale]}
+        </button>
+      ))}
     </>
   );
 }

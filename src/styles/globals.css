@@ -30,4 +30,9 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  a,
+  button {
+    @apply text-muted-foreground hover:text-foreground transition-colors;
+  }
 }

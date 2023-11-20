@@ -2,18 +2,19 @@ import { getMDXComponent } from "mdx-bundler/client";
 import Image from "next/image";
 import { Link } from "./link";
 import { Locale } from "@/utils/types";
-import { translateWithDeepL } from "@/utils/translate-with-deepl";
 import { createElement } from "react";
 import { cn } from "@/utils/helpers";
+import { translateWithChatGPT } from "@/utils/translate-with-chatgpt";
 
 type ElementKey = keyof JSX.IntrinsicElements;
 
 interface Props {
   code: string;
   lang: Locale;
+  slug?: string;
 }
 
-export async function MDXComponent({ code, lang }: Props) {
+export async function MDXComponent({ code, lang, slug = "" }: Props) {
   const Component = getMDXComponent(code);
   const translateTargetTags: ElementKey[] = [
     "h1",
@@ -28,7 +29,7 @@ export async function MDXComponent({ code, lang }: Props) {
     Record<string, React.ComponentType<any>>
   >((acc, tag) => {
     acc[tag] = async ({ children, ...rest }) =>
-      createElement(tag, rest, await translateWithDeepL(children, lang));
+      createElement(tag, rest, await translateWithChatGPT(children, lang));
     return acc;
   }, {});
 
@@ -50,8 +51,8 @@ export async function MDXComponent({ code, lang }: Props) {
             );
           },
           a: async ({ children, href, ...rest }) => {
-            if (!href || typeof children !== "string") return null;
-            const translated = await translateWithDeepL(children, lang);
+            if (!href) return null;
+            const translated = await translateWithChatGPT(children, lang);
             if (isFullUrl(href)) {
               return (
                 <a
@@ -64,7 +65,16 @@ export async function MDXComponent({ code, lang }: Props) {
                 </a>
               );
             } else {
-              return <Link href={href}>{translated}</Link>;
+              const isAnchor = href.startsWith("#");
+              const footnoteId = isAnchor
+                ? convertFnAndFnref(href.slice(1))
+                : undefined;
+              const newHref = isAnchor ? `/blog/${slug}${href}` : href;
+              return (
+                <Link id={footnoteId} href={newHref}>
+                  {translated}
+                </Link>
+              );
             }
           },
           code: ({ className, ...rest }) => (
@@ -85,4 +95,8 @@ function isFullUrl(url: string): boolean {
   } catch (error) {
     return false;
   }
+}
+
+function convertFnAndFnref(str: string) {
+  return str.replace(/fnref|fn/g, (match) => (match === "fn" ? "fnref" : "fn"));
 }

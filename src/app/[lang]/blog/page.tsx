@@ -6,7 +6,7 @@ import { Metadata } from "next";
 import { PageProps } from "../layout";
 import { Locale } from "@/utils/types";
 import { getPost } from "@/utils/get-post";
-import { translateWithDeepL } from "@/utils/translate-with-deepl";
+import { translateWithChatGPT } from "@/utils/translate-with-chatgpt";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -19,9 +19,9 @@ export default async function Page({ params: { lang } }: Props) {
 
   return (
     <div>
-      <ul>
+      <ul className="grid gap-4">
         {postMatters.map((matter) => (
-          <li key={matter.slug} className="flex gap-1">
+          <li key={matter.slug} className="flex gap-2">
             <time dateTime={matter.publishedAt.toISOString()}>
               {format(matter.publishedAt, "yyyy-MM-dd")}
             </time>
@@ -38,7 +38,10 @@ const getAllPostMatters = async (lang: Locale) => {
   const posts = await Promise.all(
     postFilePaths.map(async (slug) => {
       const { frontmatter } = await getPost(slug);
-      const translatedTitle = await translateWithDeepL(frontmatter.title, lang);
+      const translatedTitle = await translateWithChatGPT(
+        frontmatter.title,
+        lang
+      );
       return {
         title: translatedTitle,
         publishedAt: frontmatter.publishedAt,

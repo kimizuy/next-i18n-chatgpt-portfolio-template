@@ -37,14 +37,14 @@ export type PageProps = Omit<Props, "children">;
 
 export default function RootLayout({ children, params }: Props) {
   return (
-    <html lang={params.lang}>
+    <html lang={params.lang} className="scroll-p-20">
       <body className={inter.className}>
         <div className="grid min-h-screen grid-cols-[100%] grid-rows-[auto,1fr,auto]">
           <header className="sticky top-0 z-10 grid h-16 place-items-center border-b bg-background px-4 md:px-8">
             <div className="mx-auto flex w-full max-w-5xl items-center justify-between">
               <Link
                 href="/"
-                className="flex items-center gap-1 text-lg font-bold"
+                className="flex items-center gap-1 text-lg font-bold text-foreground"
               >
                 <span className="relative h-[1.8em] w-[1.8em]">
                   <Image
@@ -58,7 +58,7 @@ export default function RootLayout({ children, params }: Props) {
                 </span>
                 {SITE_TITLE}
               </Link>
-              <Navigation />
+              <Navigation lang={params.lang} />
             </div>
           </header>
           <main className="p-[2rem_1rem_8rem] md:p-[3rem_2rem_12rem]">
