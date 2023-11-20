@@ -16,7 +16,7 @@ export const getPost = cache(async (slug: string) => {
     const { code, matter } = await bundleMDX({ source, cwd, imagesUrl });
     const frontmatter = matter.data;
     if (!isFrontmatter(frontmatter)) {
-      throw new Error(`Invalid format in "${slug}/index.mdx".`);
+      throw new Error(`Invalid format in "${filePath}".`);
     }
     return { code, frontmatter, slug };
   } catch (error) {

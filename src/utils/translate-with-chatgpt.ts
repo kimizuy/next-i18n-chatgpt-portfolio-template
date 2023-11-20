@@ -13,8 +13,9 @@ export const openai = new OpenAI({
 });
 
 export const translateWithChatGPT = cache(
-  async (text: string, targetLang: Locale) => {
+  async (text: any, targetLang: Locale) => {
     if (i18nConfig.defaultLocale === targetLang) return text;
+    if (typeof text !== "string") return text;
     const content = `Please translate the following ${
       languages[i18nConfig.defaultLocale]
     } text into ${
