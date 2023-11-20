@@ -33,7 +33,6 @@ export async function bundleMDX(options: {
 
     esbuildOptions: (options) => {
       if (!imagesUrl) return options;
-
       options.outdir = path.join(process.cwd(), "public", imagesUrl);
       options.loader = {
         ...options.loader,
