@@ -7,10 +7,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { isLocale } from "@/utils/type-predicates";
 import { i18nConfig, languages } from "@/utils/i18n-config";
 import { Locale } from "@/utils/types";
+import { getDictionary } from "@/utils/get-dictionary";
 
 type Props = { lang: Locale };
 
 export function Navigation({ lang }: Props) {
+  const dictionary = getDictionary(lang);
+
   return (
     <nav>
       {/* Mobile menu */}
@@ -26,7 +29,11 @@ export function Navigation({ lang }: Props) {
             <Link href="/blog">Blog</Link>
             <Link href="/about">About</Link>
             <div className="my-1 w-full border-t" />
-            <small className="text-muted-foreground">Languages</small>
+            <Globe
+              size={16}
+              className="text-muted-foreground"
+              aria-label={dictionary.language}
+            />
             <LanguageChanger lang={lang} />
           </Popover.Content>
         </Popover.Portal>
